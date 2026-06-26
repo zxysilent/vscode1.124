@@ -50,14 +50,14 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      COMMIT: 6928394f91b684055b873eecb8bc281365131f1c
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: artifacts/
       - name: Layout binaries for Remote-SSH
-        env:
-          COMMIT: 6928394f91b684055b873eecb8bc281365131f1c
         run: |
           SRCDIR="commit:${COMMIT}"
           mkdir -p "${SRCDIR}/cli-alpine-x64"
