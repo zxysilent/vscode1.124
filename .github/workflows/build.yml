@@ -54,18 +54,23 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          path: bin/
-      - name: Move to bin/ root
+          path: artifacts/
+      - name: Layout binaries for Remote-SSH
+        env:
+          COMMIT: 6928394f91b684055b873eecb8bc281365131f1c
         run: |
-          mkdir -p bin
-          mv bin/patch-copilot-linux-x86_64/patch-copilot-linux-x86_64 bin/
-          mv bin/patch-copilot-linux-aarch64/patch-copilot-linux-aarch64 bin/
-          rmdir bin/patch-copilot-linux-x86_64 bin/patch-copilot-linux-aarch64 2>/dev/null || true
-          ls -lh bin/
+          SRCDIR="commit:${COMMIT}"
+          mkdir -p "${SRCDIR}/cli-alpine-x64"
+          mkdir -p "${SRCDIR}/cli-alpine-arm64"
+          cp artifacts/patch-copilot-linux-x86_64/patch-copilot-linux-x86_64 "${SRCDIR}/cli-alpine-x64/stable"
+          cp artifacts/patch-copilot-linux-aarch64/patch-copilot-linux-aarch64 "${SRCDIR}/cli-alpine-arm64/stable"
+          chmod +x "${SRCDIR}/cli-alpine-x64/stable"
+          chmod +x "${SRCDIR}/cli-alpine-arm64/stable"
+          ls -lh "${SRCDIR}/cli-alpine-x64/stable" "${SRCDIR}/cli-alpine-arm64/stable"
       - name: Commit & push binaries
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git add bin/
+          git add "commit:${COMMIT}/"
           git commit -m "Update binaries" || echo "No changes"
           git push
