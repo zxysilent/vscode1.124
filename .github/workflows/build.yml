@@ -12,9 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Build x86_64
-        run: |
-          cd cli
-          cargo build --release
+        run: cd cli && cargo build --release
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -26,15 +24,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-        with:
-          target: aarch64-unknown-linux-gnu
-      - name: Install cross deps
-        run: |
-          sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
-      - name: Build aarch64
-        run: |
-          cd cli
-          cargo build --release --target aarch64-unknown-linux-gnu
+      - name: Install cross
+        run: cargo install cross --locked
+      - name: Build aarch64 (cross)
+        run: cd cli && cross build --release --target aarch64-unknown-linux-gnu
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
