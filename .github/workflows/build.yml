@@ -1,10 +1,6 @@
 name: Build CLI
 
 on:
-  push:
-    branches: [main]
-    paths-ignore:
-      - 'bin/**'
   workflow_dispatch:
 
 jobs:
@@ -59,8 +55,6 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: bin/
-      - name: Verify binaries
-        run: ls -lh bin/*/patch-copilot-*
       - name: Move to bin/ root
         run: |
           mkdir -p bin
@@ -73,5 +67,5 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git add bin/
-          git commit -m "Update binaries [skip ci]" || echo "No changes to commit"
+          git commit -m "Update binaries" || echo "No changes"
           git push
