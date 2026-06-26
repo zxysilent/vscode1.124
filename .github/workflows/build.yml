@@ -71,6 +71,6 @@ jobs:
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git add "commit:${COMMIT}/"
+          git add -- "./commit:${COMMIT}/"
           git commit -m "Update binaries" || echo "No changes"
           git push
